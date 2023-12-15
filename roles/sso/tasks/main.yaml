@@ -1,5 +1,65 @@
-- name: Install basic sso library
+- name: install  Prerequiset Apps
   ansible.builtin.apt:
+    state: present
     pkg:
       - default-jdk
- 
+      - postgresql
+      - python3-psycopg2
+      - python3-virtualenv
+      - acl
+      - unzip
+      - redis-server
+      - supervisor
+
+- name: Create Keycloak Postgresql User
+  become: true
+  become_user: postgres
+  postgresql_user:
+    name: "{{ sso_db_user }}"
+    password: "{{ sso_db_password }}"
+    role_attr_flags: SUPERUSER
+    expires: infinity
+
+- name: Create a new database with name "{{ sso_db_name }}"
+  community.postgresql.postgresql_db:
+    name: "{{ sso_db_name }}"
+    login_host: "{{ sso_db_host }}"
+    login_user: "{{ sso_db_user }}"
+    login_password: "{{ sso_db_password }}"
+
+- name: Create User keycloak
+  ansible.builtin.user:
+    name: keycloak
+    uid: 1001
+
+- name: Create Keycloak Install dir
+  ansible.builtin.file:
+    name: /opt/keycloak
+    state: directory
+    owner: keycloak
+    group: root
+
+- name: Download Keyloak
+  ansible.builtin.unarchive:
+    src: "{{ sso_keycloak_url }}"
+    dest: /opt/keycloak
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+  args:
+    creates: /opt/keycloak/version.txt
+
+- name: Config Supervisor
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { 'src': 'templates/kc.conf.j2', 'dest': '/etc/supervisor/conf.d/kc.conf'}
+  notify:
+    - restart supervisor
+
+- name: Manage the state of program to be in started state
+  community.general.supervisorctl:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - kc 

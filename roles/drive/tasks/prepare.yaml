@@ -1,0 +1,9 @@
+- name: Installing Aplication server
+  ansible.builtin.apt:
+    state: present
+    update_cache: yes
+    pkg:
+      - nginx
+      - php-cli
+      - php-fpm
+

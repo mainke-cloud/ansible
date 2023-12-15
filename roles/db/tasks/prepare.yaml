@@ -1,0 +1,33 @@
+- name: Installing Database Server
+  ansible.builtin.apt:
+    state: present
+    update_cache: yes
+    pkg:
+      - postgresql
+      - python3-psycopg2
+      - acl
+
+- name: Get Postgresql Version
+  shell: "pg_config --version | awk '{print $2}' | cut -d . -f 1"
+  register: pgversion
+
+- name: Config Postgresql
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { 'src': 'templates/postgresql.conf.j2', 'dest': '/etc/postgresql/{{ pgversion.stdout }}/main/conf.d/postgresql.conf'}
+    - { 'src': 'templates/pg_hba.conf.j2', 'dest': '/etc/postgresql/{{ pgversion.stdout }}/main/pg_hba.conf'}
+  notify:
+    - restart postgresql
+
+- name: Create User
+  become: true
+  become_user: postgres
+  postgresql_user:
+    name: "{{ postgresql_user }}"
+    password: "{{ postgresql_password }}"
+    role_attr_flags: SUPERUSER
+    expires: infinity
+
+    

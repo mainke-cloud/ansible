@@ -3,3 +3,11 @@
     pkg:
       - vim 
       - tmux
+      - net-tools
+      - iputils-ping
+      - apt-transport-https 
+      - ca-certificates 
+      - curl
+      - jq
+      - python3-jsonpath-rw
+      - nfs-common

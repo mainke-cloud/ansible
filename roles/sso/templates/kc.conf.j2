@@ -1,0 +1,7 @@
+[program:kc]
+command = /opt/keycloak/bin/kc.sh start --spi-theme-welcome-theme=kkp --db=postgres --db-username={{ sso_db_user }} --db-password={{ sso_db_password }} --db-url-host=127.0.0.1 --db-url-database={{ sso_db_name }} --hostname-strict=false  --http-enabled=true --proxy=edge
+directory = /opt/keycloak
+#environment = JAVA_OPTS="-server -Xms2048m -Xmx500m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true"
+environment = KEYCLOAK_ADMIN="{{ sso_default_user}}",KEYCLOAK_ADMIN_PASSWORD="{{ sso_default_password }}"
+stdout_logfile=/var/log/supervisor/kc.log
+stderr_logfile=/var/log/supervisor/kc.log

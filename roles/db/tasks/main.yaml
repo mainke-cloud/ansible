@@ -1,0 +1,2 @@
+- name: sulut | Prepare Database
+  include_tasks: prepare.yaml

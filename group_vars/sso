@@ -1,0 +1,7 @@
+sso_db_user: keycloak
+sso_default_user: admin
+sso_default_password: R4h4514
+sso_db_name: keycloak
+sso_db_password: R4h4514
+sso_db_host: 127.0.0.1
+sso_keycloak_url: https://github.com/keycloak/keycloak/releases/download/21.1.1/keycloak-21.1.1.tar.gz
