@@ -1,9 +1,31 @@
-- name: Installing Aplication server
-  ansible.builtin.apt:
-    state: present
-    update_cache: yes
-    pkg:
-      - nginx
-      - php-cli
-      - php-fpm
+- name: Check if minio already exist
+  stat: path=/usr/local/bin/minio
+  register: minop
 
+- name: Install a .deb package for minio
+  ansible.builtin.apt:
+    deb: https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20240315010719.0.0_amd64.deb
+  when: minop.stat.exists is false
+
+- name: Add the user 'minio-user'
+  ansible.builtin.user:
+    name: minio-user
+    comment: Minio User
+    shell: /bin/bash
+    home: "{{ storage_path }}"
+ 
+- name: Config minio
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { 'src': 'templates/default_minio.j2', 'dest': '/etc/default/minio'}
+  notify:
+    - restart minio
+
+
+- name: start minio
+  ansible.builtin.service:
+    name: minio
+    state: started
+    enabled: true

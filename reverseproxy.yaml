@@ -1,0 +1,7 @@
+- hosts: reverseproxy
+  become: true
+  become_user: root
+  roles:
+    - common
+    - reverseproxy
+

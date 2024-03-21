@@ -1,3 +1,68 @@
-- name: Installing Document Database Server
-  ansible.builtin.debug:
-       msg: System {{ inventory_hostname }} 
+- name: Set sysctl
+  ansible.posix.sysctl:
+    name: vm.max_map_count
+    value: '128000'
+    state: present
+
+- name: Add mongodb key
+  ansible.builtin.apt_key:
+    url: https://www.mongodb.org/static/pgp/server-7.0.asc
+    state: present
+
+- name: Add Mongodb repo
+  ansible.builtin.apt_repository:
+    repo: deb https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse
+    state: present
+    filename: mongodb
+
+- name: Install Mongodb ORG and lib
+  ansible.builtin.apt:
+    pkg:
+      - mongodb-org
+      - python3-pymongo
+
+- name: Hold Mongodb version
+  ansible.builtin.dpkg_selections:
+    name: '{{ item }}'
+    selection: hold
+  with_items:
+    - mongodb-org
+    - mongodb-org-database
+    - mongodb-org-server
+    - mongodb-mongosh
+    - mongodb-org-mongos
+    - mongodb-org-tools
+
+- name: Enable service mongod
+  ansible.builtin.systemd_service:
+    name: mongod
+    state: started
+    enabled: true
+
+- name: Sleep for 10 seconds and continue with play
+  ansible.builtin.wait_for:
+    timeout: 10
+
+- name: Register a variable, ignore errors and continue
+  ansible.builtin.shell: "ss -lt | grep 127.0.0.1:27017"
+  register: result
+  ignore_errors: true
+
+- name: Create 'admin' database user with name '{{ db_username }}' and password '{{ db_password }}'.
+  tags: user
+  community.mongodb.mongodb_user:
+    login_database: "$external"
+    database: admin
+    name: "{{ db_username }}"
+    password: "{{ db_password }}"
+    state: present
+  when: result is succeeded
+
+- name: Config Mongodb
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { 'src': 'templates/mongod.conf.j2', 'dest': '/etc/mongod.conf'}
+  notify:
+    - restart mongodb

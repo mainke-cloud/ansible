@@ -4,4 +4,4 @@ sso_default_password: R4h4514
 sso_db_name: keycloak
 sso_db_password: R4h4514
 sso_db_host: 127.0.0.1
-sso_keycloak_url: https://github.com/keycloak/keycloak/releases/download/24.0.1/keycloak-24.0.1.tar.gz
+sso_keycloak_url: https://github.com/keycloak/keycloak/releases/download/21.1.1/keycloak-21.1.1.tar.gz

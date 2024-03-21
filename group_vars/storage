@@ -1,0 +1,7 @@
+storage_default_host: 10.1.109.192
+storage_default_console_host: 127.0.0.1
+storage_default_port: 9000
+storage_default_console_port: 9001
+storage_path: /mnt/minio
+storage_default_user: miniouser
+storage_default_password: miniouser

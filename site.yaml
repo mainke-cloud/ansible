@@ -2,3 +2,4 @@
 - import_playbook: sso.yaml
 - import_playbook: db.yaml
 - import_playbook: storage.yaml
+- import_playbook: reverseproxy.yaml

@@ -1,14 +1,15 @@
 [kube]
-coofis-kube ansible_host=2.2.2.3 ansible_user=bram ansible_become_password=bram
-
-[sso:vars]
-sso_db_name=sso
+coofis-kube ansible_host=192.168.13.44 ansible_user=coofisadmin ansible_become_password=coofisadmin
 
 [sso]
-coofis-sso ansible_host=2.2.2.3 ansible_user=bram ansible_become_password=bram
+coofis-sso ansible_host=192.168.13.44 ansible_user=coofisadmin ansible_become_password=coofisadmin
+
 
 [db]
-coofis-db ansible_host=2.2.2.3 ansible_user=bram ansible_become_password=bram
+coofis-db ansible_host=192.168.13.44 ansible_user=coofisadmin ansible_become_password=coofisadmin
 
 [storage]
-coofis-storage ansible_host=2.2.2.3 ansible_user=bram ansible_become_password=bram
+coofis-storage ansible_host=192.168.13.44 ansible_user=coofisadmin ansible_become_password=coofisadmin
+
+[reverseproxy]
+coofis-reverseproxy ansible_host=192.168.13.44 ansible_user=coofisadmin ansible_become_password=coofisadmin
