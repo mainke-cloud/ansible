@@ -1,2 +1,4 @@
 - import_playbook: kube.yaml
 - import_playbook: sso.yaml
+- import_playbook: db.yaml
+- import_playbook: storage.yaml

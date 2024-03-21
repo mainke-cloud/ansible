@@ -1,2 +1,3 @@
-- name: sulut | Prepare Database
-  include_tasks: prepare.yaml
+- name: Installing Document Database Server
+  ansible.builtin.debug:
+       msg: System {{ inventory_hostname }} 

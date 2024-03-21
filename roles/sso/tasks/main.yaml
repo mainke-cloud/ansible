@@ -1,4 +1,4 @@
-- name: install  Prerequiset Apps
+- name: install  Prerequisite Apps
   ansible.builtin.apt:
     state: present
     pkg:
