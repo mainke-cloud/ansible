@@ -13,7 +13,7 @@
     comment: Minio User
     shell: /bin/bash
     home: "{{ storage_path }}"
- 
+
 - name: Config minio
   ansible.builtin.template:
     src: "{{ item.src }}"

@@ -1,4 +1,4 @@
 db_default_port: 27017
-db_default_host: 10.1.109.192
+db_default_host: 10.1.55.64
 db_username: admin
 db_password: admin

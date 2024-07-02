@@ -1,6 +1,7 @@
 - name: install  Prerequisite Apps
   ansible.builtin.apt:
     state: present
+    update_cache: yes
     pkg:
       - default-jdk
       - postgresql
@@ -30,7 +31,7 @@
 - name: Create User keycloak
   ansible.builtin.user:
     name: keycloak
-    uid: 1001
+    uid: 1010
 
 - name: Create Keycloak Install dir
   ansible.builtin.file:
@@ -62,4 +63,4 @@
     name: '{{ item }}'
     state: present
   with_items:
-    - kc 
+    - kc
